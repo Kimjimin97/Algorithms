@@ -1,26 +1,25 @@
 n = int(input())
 a = list(input())
-m = (n+1)//2 - 1
+
+
+(3+8*7-9*2)
+
+
+# 연산자 사이에 0을 넣고 0이 나오면 3자리 전까지 탐색하여 수 계산을 먼저 해준다.
+
+# 괄호시작시점은 (0,2,4,6) 인덱스 끝까지 가면 안됀다.
+# 괄호 시작 지점부터 가야하는 갯수 (4번째 후) -> 계산 인덱스 끝까지 가면 안됀다
+# 한칸 이후 4번째 후 -> 계산
+# 끝 인덱스 계산 기준은? -> 시작지점은 (마지막인덱스 -4지점까지)
+
+
+for i in range(0,n,2):
+    a[i] = int(a[i])
+
+m = (n-1)//2 # 연산자의 갯수
 ans = None
-for s in range(1<<m):
+
+for s in range(1,m+1):
     ok = True
     for i in range(m-1):
-        if (s&(1<<i)) > 0 and (s&(1<<(i+1))) > 0:
-            ok = False
-
-    if not ok:
-        continue
-    b = a[:]
-    for i in range(m):
-        if (s & (1<<i)) > 0:
-            k = 2*i+1
-            b[k-1] = '('+b[k-1]
-            b[k+1] = b[k+1]+')'
-    #print(b)
-    c = ''.join(b)
-    #print(c)
-    temp = eval(c)
-    #print(temp)
-    if ans is None or ans < temp:
-        ans = temp
-print(ans)
+        if 

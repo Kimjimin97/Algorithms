@@ -45,7 +45,6 @@ for i in range(N):
 
 answer = 0
 for a in range(3):
-    print(memo[a][N-1][N-1])
     answer += memo[a][N-1][N-1]
 
 print(answer)
