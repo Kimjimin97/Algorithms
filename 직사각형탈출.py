@@ -17,16 +17,21 @@ H, W, Sx,Sy,Fx,Fy = map(int, input().split())
 dxy = [(1,0),(-1,0),(0,-1),(0,1)]
 
 
-S = [[0]*M for _ in range(M)]
+S = [[0]*M for _ in range(N)]
 
 
 for i in range(N):
     for j in range(M):
-        if j+1 < M:
-            S[i][j+1] = graph[i][j+1] + S[i][j]
+        if i == 0 and j == 0:
+            continue
+        elif i == 0:
+            S[i][j] = S[i][j-1] + graph[i][j]
         
-        if i+1 < N:
-            S[i+1][j] = graph[i+1][j] + S[i][j]
+        elif j == 0:
+            S[i][j] = S[i-1][j] + graph[i][j]
+        
+        else:
+            S[i][j] = S[i-1][j] + S[i][j-1] + graph[i][j] - S[i-1][j-1]
 
 
 print(S)
@@ -39,8 +44,9 @@ visited[Sx-1][Sy-1] = True
 queue.append([Sx-1,Sy-1,0])
 
 while queue:
-    top = queue.popleft()
 
+    top = queue.popleft()
+    
     if top[0] == Fx-1 and top[1] ==Fy-1 :
         answer = top[2]
         break
@@ -55,19 +61,29 @@ while queue:
         # 방문 여부
         if visited[nx][ny]:
             continue
+        
 
-        flag = True
-        for i in range(H):
-            for j in range(W):
-                if graph[nx+i][ny+j] != 0:
-                    flag = False
-                    break
-            if not flag:
-                break
+        if nx == 0 and ny == 0:
+            if S[nx+H-1][ny+W-1] == 0:
+                visited[nx][ny] = True
+                queue.append((nx,ny,top[2]+1))
 
-        if flag:
-            visited[nx][ny] = True
-            queue.append((nx,ny,top[2]+1))
+        elif nx == 0:
+            if S[nx+H-1][ny+W-1] -S[nx+H-1][ny-1] == 0:
+                visited[nx][ny] = True
+                queue.append((nx,ny,top[2]+1))
+        
+        elif ny == 0:
+            if S[nx+H-1][ny+W-1]- S[nx-1][ny+W-1] == 0:
+                visited[nx][ny] = True
+                queue.append((nx,ny,top[2]+1))
+
+        else:
+          
+            if S[nx+H-1][ny+W-1]-S[nx-1][ny+W-1] - S[nx+H-1][ny-1] +S[nx-1][ny-1]==0:
+                visited[nx][ny] = True
+                queue.append((nx,ny,top[2]+1))
+
 
 if answer == float("Inf"):
     print(-1)

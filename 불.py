@@ -25,7 +25,6 @@ for _ in range(T):
     
     while queue:
         top = queue.popleft()
-        
         for k in range(4):
             nx, ny = top[0] +dxy[k][0], top[1]+dxy[k][1]
             if 0 <= nx < h and 0 <= ny < w:
@@ -73,7 +72,3 @@ for _ in range(T):
         print("IMPOSSIBLE")
 
    
-
-print(answer)
-
-    # while queue:
