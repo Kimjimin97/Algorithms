@@ -45,8 +45,6 @@ else:
     print(answer)
     answer_li.sort()
     answers = []
-    print(answer_li)
-
     for an in answer_li[0]:
         answers.append(an+1)
     

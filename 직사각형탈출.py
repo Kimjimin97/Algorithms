@@ -34,8 +34,6 @@ for i in range(N):
             S[i][j] = S[i-1][j] + S[i][j-1] + graph[i][j] - S[i-1][j-1]
 
 
-print(S)
-
 answer = float("Inf")
 queue = deque()
 visited = [[False]*M for _ in range(N)]

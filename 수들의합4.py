@@ -1,17 +1,22 @@
 N, K = map(int, input().split())
 
-lists = list(map(int,input().split()))
+lists = list(map(int, input().split()))
 
+sums_list = dict()
 
-cnt = 0
+sums = 0
+answer = 0
+for i in range(len(lists)):
+    sums += lists[i]
 
-for i in range(N):
-    sum = lists[i]
-    if sum == K:
-        cnt += 1
-    for j in range(i+1,N):
-        sum += lists[j]
-        if sum == K:
-            cnt += 1
+    if sums - K in sums_list:
+        answer += sums_list[sums-K]
+    if sums == K:
+        answer += 1
 
-print(cnt)
+    if sums in sums_list.keys():
+        sums_list[sums] += 1
+    else:
+        sums_list[sums] = 1
+
+print(answer)
