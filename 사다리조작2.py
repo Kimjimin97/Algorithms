@@ -1,8 +1,11 @@
 
 
+from pickle import GLOBAL
+
+
 N,M,H = map(int, input().split())
 
-exist = [[False]*(N+1) for _ in range(H+1)]
+exist = [[False]*(N) for _ in range(H)]
 
 for _ in range(M):
     a,b = map(int, input().split())
@@ -13,28 +16,20 @@ res = float("Inf")
 visited = [[False]*N for _ in range(H)]
 dxy =[[0,1],[0,-1],[1,0],[-1,0]]
 
-def check():
-    for j in range(len(exist[0])):
-        i = 0
-        flag= False
-        while True:
-            if i == H:
-                flag= True
-                break
-            if exist[i][j]:
-                i += 1
-                j += 1
-
-            elif j > 0 and exist[i][j-1]:
-                i += 1
-                j -= 1
-            else:
-                i += 1
+print(exist)
+def check(): # i번 세로선이 i번으로 도착하는지 확인
+    for i in range(N):
+        temp = i     # 이동하는 세로선 위치
+        for j in range(H):
+            print(j,temp)
+            if exist[j][temp]:  # 오른쪽이 1인 경우
+                temp += 1
+            elif temp > 0 and exist[j][temp - 1]: # 왼쪽이 1인 경우
+                temp -= 1
         
-        if not flag:
+        if temp != i:
             return False
-    if flag:
-        return True
+    return True
     
 res = float("Inf")
         
@@ -51,20 +46,22 @@ def dfs(x,y,n):
         return
     
     for i in range(x,H):
+        if x == i:
+            k = y
+        else:
+            k = 0
         
+        for j in range(k,N-1): ## 마지막 인덱스는 제거해 주어야 한다.
+            if not exist[i][j]:
+                exist[i][j] = True
+                dfs(i, j+2 , n+1 )
+                exist[i][j] = False
 
-
-    for k in range(4):
-        nx, ny = x +dxy[k][0], y+ dxy[k][1]
-        if 0 < ny < N-2 and 0 < nx <= H-1:
-            if not visited[nx][ny]:
-                visited[nx][ny] = True 
-                # dfs(nx,ny,n)
-                if not exist[nx][ny-1] and not exist[nx][ny+1]:
-                    exist[nx][ny] = True
-                    dfs(nx,ny,n+1)
-                    exist[nx][ny] = False
-                visited[nx][ny] = False
 
 dfs(0,0,0)
-print(res)
+
+
+if res == float("Inf"):
+    print(-1)
+else:
+    print(res)
