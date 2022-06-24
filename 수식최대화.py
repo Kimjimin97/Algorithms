@@ -22,7 +22,6 @@ def solution(expression):
 
 
     def calculate(left, right, oper):
-        print(left, right)
         if oper == "+":
             value = left + right
             return value
@@ -54,7 +53,7 @@ def solution(expression):
                     
                     
         
-        answer = max(answer, after[0])
+        answer = max(answer, abs(after[0]))
     return 
 
 
