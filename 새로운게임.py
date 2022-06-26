@@ -28,12 +28,9 @@ while cnt <= 1000:
     for char in range(K):
         if now[char][2] != 1:
             continue 
-        blue_flag = False
-        print(now)
+
         x, y = now[char][0], now[char][1]
         nx, ny = x+dxy[char_dir[char]][0], y+dxy[char_dir[char]][1]
-        print(char, char_dir)
-        print(x,y,nx,ny)
 
         together = []
         move = []
