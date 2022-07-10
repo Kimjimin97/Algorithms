@@ -27,61 +27,84 @@ N,C // 참가 인원, 카드 갯수
 ## 로직
 - 순열 실행 순서 설정하기
 - 9! (순열) *9(연산 갯수)
+
+문제 이해를 잘 못했다.
+턴을 수행하는 사람은 가지고 있는 카드에 적혀져 있는 연산을 모두 수행하고 턴을 종료합니다.
+연산과 카드 순서를 헷갈렸다.
+
+## 최종 로직
+사람 인덱스 번호
+1) 사람이 가지고 있는 카드 갯수 알기 
+     - 사람 마다 가지고 있는 카드 수 저장
+     - []
+2) 그 만큼의 순열 생성하기  - 경우의 수 생성
+3) 경우의 수만큼 연산 수행하기
+
+나중에는 게임 종료 후 빈 문자열이면 EMPTY 출력하는 걸 깜박해서 많이 틀렸다..
+
 """
 from itertools import permutations
-
+import copy
 N,C = map(int, input().split())
 
 graph = []
 cnt = 0
-for _ in range(N):
+able = []
+for i in range(N):
+    ## 순열 시켜줄 리스트 생성 사람이 가지고 있는 카드 갯수 만큼 생성
     lists = list(map(int, input().split()))
+    able += [i]*lists[0]
+    lists.pop(0) ## 카드만 저장하기
     graph.append(lists)
-    cnt += lists[0]
+
+
 
 oper = []
 for _ in range(C):
     oper.append(list(map(str, input().split(","))))
 
+item = list(permutations(able))
 
-items = [i for i in range(N)] ## 사람 순서 정하기
-item = list(permutations(items))
 
-print(item)
-## 사람 순서대로 연산 실행하기
-answer = []
-strings = ""
-def calculate(cards):
+# ## 사람 순서대로 연산 실행하기
+# answer = []
+# strings = ""
+def calculate(card):
     global strings
-    cards = cards[1:]
-    for card in cards:
-        for k in oper[card-1]:
-            a,b = map(str, k.split())
-            if a == "ADD":
-                strings += b
-            elif a == "DEL":
-                b= int(b)
-                if len(strings) > b:
-                    strings = strings[:b] + strings[b+1:]
-                else:
-                    return False 
+
+    for k in oper[card]:
+        a,b = map(str, k.split())
+        if a == "ADD":
+            strings += b
+        elif a == "DEL":
+            b= int(b)
+            if len(strings) > b:
+                strings = strings[:b] + strings[b+1:]
+            else:
+                return False
+
     return True
 
-
-
+answer = []
 for it in item:
     strings = ""
-    for i in it:
+    graphs = copy.deepcopy(graph)
+    for i in it: ## 카드를 제출 할 사람 뽁기
         ## 연산 할 카드 뽑기
-        cards = graph[i]
+        card = graphs[i].pop(0) -1
 
-        ## 카드 연산하기
-        if not calculate(cards):
+    #     ## 카드 연산하기 
+        if not calculate(card):
             strings = "ERROR"
             break 
-    answer.append(strings)
+    
+    if strings == "":
+        answer.append("EMPTY")
+    else:
+        answer.append(strings)
 
-print(items)
-answer.sort()       
+
+answer.sort()
+answer =set(answer)       
 for g in answer:
     print(g)
