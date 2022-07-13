@@ -39,12 +39,9 @@ dxy = [[-1,0],[-1,1],[0,1], [1,1],[1,0],[1,-1],[0,-1],[-1,-1]]
 
 tcnt = 0
 
-print(horse)
-
 # cnt가 K번 실행
 while tcnt < K:
     ## 같은 위치에 있는 말 찾기
-    
     
     loca = dict()
     ## 말 이동
@@ -53,19 +50,21 @@ while tcnt < K:
             continue
         
         
-        r,c = r +dxy[d][0]*s, c+dxy[d][1]*s
+        nr,nc = r +dxy[d][0]*s, c+dxy[d][1]*s
+        
         ## 위치 인덱스 잘못 품
-        r = (r + N) % N
-        c = (c + N) % N
+        nr = (nr + N) % N
+        nc = (nc + N) % N
+    
 
-        if (r,c) in loca.keys():
-            loca[(r,c)].append([m,s,d])
+        if (nr,nc) in loca.keys():
+            loca[(nr,nc)].append([m,s,d])
 
         else:
-            loca[(r,c)] = [[m,s,d]]
+            loca[(nr,nc)] = [[m,s,d]]
     
     nhorse = []
-    print(loca)
+  
     ## 말들을 나누는 과정
     for r,c in loca.keys():
         ## 질량의 합, 속력의 합, 파이어볼 갯수
@@ -74,41 +73,33 @@ while tcnt < K:
 
         elif len(loca[(r,c)]) >= 2:
             cnt_horse = len(loca[(r,c)]) ## 말들의 갯수
-            sum_w, sum_v, sum_d = 0,0,0
+            sum_w, sum_v, sum_d,cnt_odd, cnt_even = 0,0,0,0,0
             for m,s,d in loca[(r,c)]:
                 sum_w += m  
                 sum_v += s
                 sum_d += d
+                if d % 2 == 0:
+                    cnt_even += 1
+                else:
+                    cnt_odd += 1
 
-        
                 ## 합쳐진 파이어볼 방향이 모두 홀수인지 짝수인지, 짝수이면 
-            if len(loca[(r,c)]) >= 2:
-                flag = True
-                if len(loca[(r,c)]) %2 ==0:
-                    if sum_d%2 !=0:
-                        flag = False 
-                else:
-                    if sum_d%2  == 0:
-                        flag = False 
-                loca[(r,c)] = []
-                if flag:
-                    for k in [0,2,4,6]:
-                        nhorse.append([r,c,sum_w//5,sum_v//cnt_horse,k])
+            if cnt_horse ==  cnt_even or cnt_horse ==  cnt_odd:
+                for k in [0,2,4,6]:
+                    nhorse.append([r,c,sum_w//5,sum_v//cnt_horse,k])
                 
-                else:
-                    for k in [1,3,5,7]:
-                        nhorse.append([r,c,sum_w//5,sum_v//cnt_horse,k])
-    print(horse)
+            else:
+                for k in [1,3,5,7]:
+                    nhorse.append([r,c,sum_w//5,sum_v//cnt_horse,k])
+
     horse = copy.deepcopy(nhorse)
     tcnt+=1
-    
+
 answer = 0
 
 
-
-for i in loca.keys():
-    for m,s,d in loca[i]:
-        answer += m
+for r,c,m,s,d in nhorse:
+    answer += m
 
 
 print(answer)

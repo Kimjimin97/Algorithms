@@ -1,2 +1,1 @@
-for x in (1):
-    print(x)
+print(-1%7)
