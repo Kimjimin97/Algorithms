@@ -1,0 +1,12 @@
+N, M = map(int, input().split())
+
+graph = []
+for _ in range(5):
+    graph.append(list(map(int, input().split())))
+
+command = []
+for _ in range(4):
+    command.append(list(map(int, input().split())))
+
+print(graph)
+print(command)
