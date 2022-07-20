@@ -1,13 +1,9 @@
-from ast import Continue
-
-
 N, M = map(int, input().split())
 
 graph = []
-for i in range(5):
+for i in range(N):
     lists = list(map(int, input().split()))
     graph.append(lists)
-
 
 command = []
 for i in range(M):
@@ -15,58 +11,59 @@ for i in range(M):
     command.append(lists)
 
 
-print(graph)
-print(command)
+
 
 ##  (N, 1), (N, 2), (N-1, 1), (N-1, 2)에 비구름이 생긴다
-
 cnt = 0
+cloud = [[N-1, 0], [N-1, 1], [N-2, 0], [N-2, 1]]
 
-cloud = [(N-1, 0), (N-1, 1), (N-2, 0), (N-2, 1)]
-
-cloud_visited = [[False]*N for _ in range(N)]
 dxy = [[0,-1],[-1,-1],[-1,0],[-1,1],[0,1],[1,1],[1,0],[1,-1]]
 
-## ←, ↖, ↑, ↗, →, ↘, ↓, ↙ 
+## ←, ↖, ↑, ↗, →, ↘, ↓, ↙
 ## 물을 증가시키는 함수
-def add_water(x,y):
-    for k in range(1,8,2):
-        nx, ny = x+dxy[k][0], y+dxy[k][1]
-        if nx < 0 or ny < 0 or nx >= N or ny >= N:
-            continue
-        graph[x][y] += 1
 
-     
-    
+
 def make_cloud():
     global cloud
     global ncloud
-    ncloud = []
+    global graph
+    global visited
+
+    cloud = []
     for i in range(N):
         for j in range(N):
-            if [i,j] not in cloud and graph[i][j] >= 2:
+            if not visited[i][j] and graph[i][j] >= 2:
                 graph[i][j] -= 2
-                ncloud.append([i,j])        
+                cloud.append([i,j])       
 
-
+def add_water(ncloud):
+    global graph
+    for x, y in ncloud:
+        for k in range(1,8,2):
+            nx, ny = x+dxy[k][0], y+dxy[k][1]
+            if nx < 0 or ny < 0 or nx >= N or ny >= N:
+                continue
+            if graph[nx][ny] > 0:
+                graph[x][y] += 1
 
 ## M번 동안 반복
 while cnt < M :
     d,s =command[cnt][0], command[cnt][1]
+    ncloud = []
+    visited =[[False]*N for _ in range(N)]
     ## 구름 이동 알고리즘
     for x, y in cloud:
         nx, ny = x+dxy[d-1][0]*s, y+dxy[d-1][1]*s
         nx = (nx+N) % N
         ny = (ny+N) % N
-        add_water(nx,ny)
         graph[nx][ny] += 1
-        cloud_visited[nx][ny]  = True
+        ncloud.append([nx,ny])
+        visited[nx][ny]= True
+
+    add_water(ncloud)
     make_cloud()
-    for g in graph:
-        print(g)
-    print()
+
     cnt += 1
-    cloud = [[ncloud[i][j] for j in range(len(cloud[0]))] for i in range(len(ncloud))]
 
 
 answer = 0
