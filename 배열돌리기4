@@ -1,0 +1,145 @@
+"""
+1) 회전 순서를 정하는 함수 → dfs
+
+2) 회전 함수
+
+   - front 저장
+
+   - front 위치에 back저장
+
+   - front를 back과 바꾼다
+
+3) 최소값을 구하는 함수
+
+   - 행의 합 구하기 최소값 구하기
+"""
+
+N,M,K = map(int, input().split())
+
+graphs = []
+
+for _ in range(N):
+    graphs.append(list(map(int, input().split())))
+
+command = []
+for _ in range(K):
+    command.append(list(map(int, input().split())))
+
+
+
+visited = [False]*K
+orders = []
+graph = [[graphs[i][j] for j in range(len(graphs[0]))] for i in range(len(graphs))]
+
+
+
+def right(row, columns,s):
+    global graph
+    back = graph[row][columns]
+    for _ in range(2*s):
+        columns += 1
+        front = graph[row][columns]
+        graph[row][columns] = back
+        back = front
+    
+
+    return row, columns
+
+def down(row, columns,s):
+    global graph
+    # back = graph[row][columns]
+    for _ in range(2*s):
+        row += 1
+        front = graph[row][columns]
+        graph[row][columns] = back
+        back = front
+
+    return row, columns
+
+
+
+def left(row, columns,s):
+    global graph
+    back = graph[row][columns]
+
+    for _ in range(2*s):
+        columns -= 1
+        front = graph[row][columns]
+        graph[row][columns] = back
+        back = front
+
+    return row, columns
+
+def up(row, columns,s):
+    global graph
+    back = graph[row][columns]
+    for _ in range(2*s):
+        row -= 1
+        front = graph[row][columns]
+        graph[row][columns] = back
+        back = front
+    return row, columns
+
+
+def check_min(graph):
+    middle_answer = float("Inf")
+    for g in graph:
+        middle_answer = min(sum(g), middle_answer)
+    
+    return middle_answer
+    
+        
+
+answer =float("Inf")
+def rotate(orders):
+    global graphs
+    global answer
+    global graph
+    graph = [[graphs[i][j] for j in range(len(graphs[0]))] for i in range(len(graphs))]
+    
+    for r,c,s in orders:
+        row, columns= r-s-1, c-s-1
+        print(s//2+1)
+        for k in range(s//2+1):
+            nrow, ncolumns = row+k, columns+k
+            # print(orders,k,nrow, ncolumns)
+            nrow, ncolumns = right(nrow, ncolumns,s-2*k)
+            # print(orders,k,nrow, ncolumns)
+            nrow, ncolumns = down(nrow, ncolumns,s-2*k)
+            # print(orders,k,nrow, ncolumns)
+            nrow, ncolumns = left(nrow, ncolumns,s-2*k)
+            # print(orders,k,nrow, ncolumns)
+            nrow, ncolumns = up(nrow, ncolumns,s-2*k)
+            # print(orders,k,nrow, ncolumns)
+            for g in graph:
+                print(g)
+            print()
+            
+
+    answer = min(check_min(graph),answer)
+        
+            
+    return
+
+def set_order(L):
+    global visited
+    global orders
+    if L == K:
+        rotate(orders)
+        return
+    
+    for k in range(K):
+        if not visited[k]:
+            visited[k] = True
+            orders.append(command[k])
+            set_order(L+1)
+            orders.pop()
+            visited[k] = False
+
+    
+set_order(0)
+print(answer)
+    
+
+
+
