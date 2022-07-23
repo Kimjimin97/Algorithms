@@ -14,6 +14,9 @@
    - 행의 합 구하기 최소값 구하기
 """
 
+
+
+
 N,M,K = map(int, input().split())
 
 graphs = []
@@ -33,57 +36,56 @@ graph = [[graphs[i][j] for j in range(len(graphs[0]))] for i in range(len(graphs
 
 
 
-def right(row, columns,s):
+def right(row, columns,s,back):
     global graph
-    back = graph[row][columns]
-    for _ in range(2*s):
+    for _ in range(s):
         columns += 1
         front = graph[row][columns]
         graph[row][columns] = back
         back = front
     
 
-    return row, columns
+    return row, columns, back
 
-def down(row, columns,s):
+def down(row, columns,t,back):
     global graph
     # back = graph[row][columns]
-    for _ in range(2*s):
+    for _ in range(t):
         row += 1
         front = graph[row][columns]
         graph[row][columns] = back
         back = front
 
-    return row, columns
+    return row, columns, back
 
 
 
-def left(row, columns,s):
+def left(row, columns,t,back):
     global graph
-    back = graph[row][columns]
+    # back = graph[row][columns]
 
-    for _ in range(2*s):
+    for _ in range(t):
         columns -= 1
         front = graph[row][columns]
         graph[row][columns] = back
         back = front
 
-    return row, columns
+    return row, columns, back
 
-def up(row, columns,s):
+def up(row, columns,t, back):
     global graph
-    back = graph[row][columns]
-    for _ in range(2*s):
+    # back = graph[row][columns]
+    for _ in range(t):
         row -= 1
         front = graph[row][columns]
         graph[row][columns] = back
         back = front
-    return row, columns
+    return row, columns, back
 
 
-def check_min(graph):
+def check_min(ngraph):
     middle_answer = float("Inf")
-    for g in graph:
+    for g in ngraph:
         middle_answer = min(sum(g), middle_answer)
     
     return middle_answer
@@ -93,39 +95,33 @@ def check_min(graph):
 answer =float("Inf")
 def rotate(orders):
     global graphs
-    global answer
     global graph
+    global answer
     graph = [[graphs[i][j] for j in range(len(graphs[0]))] for i in range(len(graphs))]
     
     for r,c,s in orders:
         row, columns= r-s-1, c-s-1
-        print(s//2+1)
+        
         for k in range(s//2+1):
             nrow, ncolumns = row+k, columns+k
-            # print(orders,k,nrow, ncolumns)
-            nrow, ncolumns = right(nrow, ncolumns,s-2*k)
-            # print(orders,k,nrow, ncolumns)
-            nrow, ncolumns = down(nrow, ncolumns,s-2*k)
-            # print(orders,k,nrow, ncolumns)
-            nrow, ncolumns = left(nrow, ncolumns,s-2*k)
-            # print(orders,k,nrow, ncolumns)
-            nrow, ncolumns = up(nrow, ncolumns,s-2*k)
-            # print(orders,k,nrow, ncolumns)
-            for g in graph:
-                print(g)
-            print()
             
-
-    answer = min(check_min(graph),answer)
-        
+            nrow, ncolumns, back = right(nrow, ncolumns,2*s-2*k,graph[nrow][ncolumns])
             
-    return
+            nrow, ncolumns, back = down(nrow, ncolumns,2*s-2*k, back  )
+            
+            nrow, ncolumns , back= left(nrow, ncolumns,2*s-2*k, back )
+            
+            nrow, ncolumns , back= up(nrow, ncolumns,2*s-2*k, back )
+    
+    
+    return check_min(graph)
 
 def set_order(L):
     global visited
     global orders
+    global answer
     if L == K:
-        rotate(orders)
+        answer = min(answer,rotate(orders))
         return
     
     for k in range(K):
@@ -138,6 +134,7 @@ def set_order(L):
 
     
 set_order(0)
+
 print(answer)
     
 
