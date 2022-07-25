@@ -1,58 +1,61 @@
+from email.mime import base
+import sys
 from collections import deque
+input = sys.stdin.readline
+sys.setrecursionlimit(10**8)
 
 N = int(input())
 
+
+wolf_graph = [0,0]
+sheep_graph = [0,0]
 graph = [[] for _ in range(N+1)]
-link_graph = [[] for _ in range(N+1)]
-wolf_graph = [0]*(N+1) ## 동적으로 변한다.
-sheep_graph = [0]*(N+1) ## 양의 수 
 
 
-in_cnt = [0]*(N+1)
 for k in range(N-1):
-    animal, count, link = map(str, input().split())
-    count, link = int(count), int(link)
-    if animal == "S":
-        sheep_graph[k+2] = count
-    if animal == "W":
-        wolf_graph[k+2] = count
-    link_graph[k+2].append(link)
-    in_cnt[link] += 1
+    a,b,c = map(str, input().split())
+    b,c = int(b), int(c)
+    if a == "S":
+        sheep_graph.append(b)
+        wolf_graph.append(0)
+    else:
+        sheep_graph.append(0)
+        wolf_graph.append(b)
+    graph[c].append(k+2)
 
-
-queue = deque()
-answer = 0
-
-# visited = [False] * (N+1)
-## 리프노트 찾기
-for k in range(2,len(in_cnt)):
-    if in_cnt[k] == 0:
-        queue.append([k,sheep_graph[k]])
-print(queue)
-
-"""
-로직 다시 짜기
-1. 노드 방문
-2. 양이 있다면
-   2.1 현재 노드이 wolf = 늑대수 - 양의수
-   2.2 wolf가 양수이면 늑대 수 갱신
-   2.3 wolf가 음수이면 절대값은 양의 수, 늑대수는 0
-
-"""
-
-while queue:
-    print(wolf_graph)
-    node, sheep = queue.popleft()
-    if node ==1:
-        answer += sheep
-    for k in link_graph[node]: ## k 이동하려는 곳
-        wolf = wolf_graph[k] - sheep 
-        
+    
+def dfs(v):
+    sheep = 0
+    for k in graph[v]:
+        sheep += dfs(k)
+    if wolf_graph[v] > 0 : ## 늑대가 있는 경우
+        wolf = wolf_graph[v] - sheep
         if wolf > 0:
-            wolf_graph[k] = wolf
+            wolf_graph[v] = wolf
+            sheep = 0
         else:
-            wolf_graph[k] = 0
-            queue.append([k,abs(wolf)])
+            sheep = wolf*(-1)
+            wolf_graph[v] = 0
+    else:
+        sheep += sheep_graph[v]
+    
+    return sheep
 
-            
+
+    
+answer = dfs(1)
 print(answer)
+
+    
+
+    
+            
+"""
+dfs문 돌기 
+1부터 시작해서 리프노드까지 이동하기
+리프노트에 이동했다면
+return으로 남아있는 양의 수를 전달받기
+동적으로 양의 수와 늑대의 수를 바꿔주기
+"""   
+
+        
