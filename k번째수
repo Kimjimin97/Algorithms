@@ -1,0 +1,27 @@
+from xml.dom import minidom
+
+
+N = int(input())
+k = int(input())
+
+s, e = 0, k+1
+
+while s < e:
+    mid = (s+e)//2
+    cnt = 0
+    
+    for i in range(N):
+        count = mid//(i+1)
+        if count > N:
+            count = N
+        cnt += count ## 각행의 mid 값보다 작거나 같은 수의 갯수
+
+    print(cnt, mid)
+    if cnt >= k: ##  mid 값을 감소 시켜주어야 한다. 
+        e  = mid
+    else: ## mid 값을 증가 시켜주어야 한다.
+        s = mid+1
+
+print(s)
+
+
