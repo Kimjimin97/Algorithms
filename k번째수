@@ -16,12 +16,12 @@ while s < e:
             count = N
         cnt += count ## 각행의 mid 값보다 작거나 같은 수의 갯수
 
-    print(cnt, mid)
+
     if cnt >= k: ##  mid 값을 감소 시켜주어야 한다. 
         e  = mid
     else: ## mid 값을 증가 시켜주어야 한다.
         s = mid+1
 
-print(s)
+print(s,e,mid)
 
 
