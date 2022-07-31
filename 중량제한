@@ -1,0 +1,56 @@
+
+import sys
+from  collections import deque
+
+input = sys.stdin.readline
+
+N,M = map(int, input().split())
+
+graph = [[] for _ in range(N+1)]
+
+# wgraph = [[0]*(N+1) for _ in range(N+1)] 
+
+l = 0
+r = float("Inf")
+for _ in range(M):
+    A,B,C = map(int, input().split())
+    # wgraph[A][B] = C 
+    # wgraph[B][A] = C 
+    graph[A].append([B,C])
+    graph[B].append([A,C])
+    l = min(l, C)
+    R = max(r,C)
+    
+
+start, goal = map(int, input().split())
+
+def bfs(mid):
+    queue = deque()
+    queue.append(start)
+    visited = []
+    visited[start] = True
+    while queue:
+        top = queue.popleft()
+        visited.append(top)
+
+        for g,w in graph[top]:
+            if visited[g]:
+                continue
+            if w >= mid:
+                queue.append(g)
+        
+    return False
+
+def wdecide():
+    global l 
+    global r
+    result = 0
+    while l <= r:
+        mid = (l+r)//2
+        if bfs(mid): ## 가능하면 무게를 늘린다.
+            l =  mid + 1
+            result = mid
+        else: ## 불가능하면 무게르 줄인다.
+            r = mid - 1
+    return result
+print(wdecide())
