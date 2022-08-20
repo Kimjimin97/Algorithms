@@ -1,3 +1,2 @@
-for i in range(1):
-    for j in range(1):
-        print(i,j)
+for g in range(1,2):
+    print(g)
