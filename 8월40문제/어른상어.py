@@ -126,8 +126,6 @@ answer = 0
 while answer <= 100:
     ## 0번 상어가 보다 수가 큰 상어의 갯수가 몇개인지 확인
 
-    
-
     update_time()
 
     print(answer)

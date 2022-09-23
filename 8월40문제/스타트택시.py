@@ -9,16 +9,17 @@ for _ in range(N):
 sx,sy = map(int, input().split())
 sx,sy = sx-1, sy-1
 
-gstart = [[-1]*N for _ in range(N)]
-gend = [[-1]*N for _ in range(N)]
+gstart = [[[] for _ in range(N)] for _ in range(N)]
+gend = [[[] for _ in range(N)] for _ in range(N)]
 
-
-
+two_dict = dict()
 for k in range(M):
     cx,cy,ex,ey = map(int, input().split())
     cx,cy,ex,ey = cx-1,cy-1,ex-1,ey-1
-    gstart[cx][cy] = k 
-    gend[ex][ey] = k
+
+    two_dict[k] = (cx,cy,ex,ey)
+    gstart[cx][cy].append(k) 
+    gend[ex][ey].append(k)
 
 total_visited = [False]*(M)
 dxy  = [[-1,0],[0,-1],[1,0],[0,1]]
