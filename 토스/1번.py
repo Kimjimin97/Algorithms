@@ -4,6 +4,7 @@
 """
 
 def solution(skills, team, k):
+    teams=0
     answer = 0
     N = len(skills)
     i = 0
